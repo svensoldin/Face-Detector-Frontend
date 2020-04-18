@@ -53,9 +53,14 @@ componentDidMount() {
     .catch(err => console.log(err));
 }
 
-//Fetches the response from CLARIFAI for the image url, updates user info, and displays the box on the image
+//1. Fetches the response from CLARIFAI for the image url 
+//2. Updates user info 
+//3. Displays the box on the image
+
 onButtonSubmit = () => {
+
   //Make a request to the CLARIFAI api through our backend
+
   this.setState({imageUrl: this.state.input});
   fetch('https://guarded-castle-84804.herokuapp.com/imageurl', {
     method: 'post',
@@ -64,13 +69,19 @@ onButtonSubmit = () => {
       input: this.state.input
       })
     })
+
   //The backend replies with the clarifai data
+
   .then(response => response.json())
   .then(response => { 
     if (response) {
+
       //Call the function that draws the box from the API's response
+
       this.calculateFaceLocation(response);
+
       //Increment the entry count
+      
       fetch('https://guarded-castle-84804.herokuapp.com/image', {
         method: 'put',
         headers: {'Content-Type': 'application/json'},
@@ -138,16 +149,20 @@ loadUser = (data) => {
   }})
 }
 
+resetImage = () => {
+  this.setState({ imageUrl: '', input: ''})
+}
+
   render() {
-    const { isSignedIn, imageUrl, boxes, route} = this.state;
+    const { isSignedIn, imageUrl, boxes, route, user } = this.state;
     return (
       <div className="App">
         <Particles className='particles' params={particlesOptions} />
         <Navigation isSignedIn={ isSignedIn } onRouteChange={this.onRouteChange}/>
         { route === 'home'
           ? <div>
-              <Logo />          
-              <Rank name={this.state.user.name} entries={this.state.user.entries}/>
+              <Logo resetImage={this.resetImage}/>          
+              <Rank name={ user.name } entries={ user.entries }/>
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>
               <FaceRecognition boxes={ boxes } imageUrl={ imageUrl }/>
             </div>
