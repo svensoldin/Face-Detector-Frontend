@@ -47,7 +47,7 @@ class App extends Component {
 }
 
 componentDidMount() {
-  fetch('https://guarded-castle-84804.herokuapp.com/imageurl/')
+  fetch('https://guarded-castle-84804.herokuapp.com/')
     .then(response => response.json())
     .then(response => console.log(response))
     .catch(err => console.log(err));
